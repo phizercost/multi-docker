@@ -6,7 +6,7 @@ before_install:
   - docker build -t phizercost/react-test -f ./client/Dockerfile.dev ./client
 
 script:
-  - docker run phizercost/react-test npm run ci_test -- —coverage
+  - docker run phizercost/react-test npm run ci_test -- —-coverage
 
 after_success:
   - docker build -t phizercost/fibonacci-client ./client
