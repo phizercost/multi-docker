@@ -1,0 +1,23 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t phizercost/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run phizercost/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t phizercost/fibonacci-client ./client
+  - docker build -t phizercost/fibonacci-nginx ./nginx
+  - docker build -t phizercost/fibonacci-server ./server
+  - docker build -t phizercost/fibonacci-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push phizercost/fibonacci-client
+  - docker push phizercost/fibonacci-nginx
+  - docker push phizercost/fibonacci-server
+  - docker push phizercost/fibonacci-worker
+
